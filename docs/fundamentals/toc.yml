@@ -2615,6 +2615,14 @@ items:
         href: networking/sockets/socket-services.md
       - name: Use TcpClient and TcpListener
         href: networking/sockets/tcp-classes.md
+    - name: Security
+      items:
+      - name: TLS/SSL Best Practices
+        href: ../core/extensions/sslstream-best-practices.md
+      - name: Troubleshooting SslStream Authentication Issues
+        href: ../core/extensions/sslstream-troubleshooting.md
+      - name: Migrating from .NET Framework to .NET Core
+        href: ../core/extensions/sslstream-migration-from-framework.md
   - name: File globbing
     href: ../core/extensions/file-globbing.md
   - name: Primitives library
