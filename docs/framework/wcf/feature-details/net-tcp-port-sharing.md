@@ -48,7 +48,48 @@ Windows Communication Foundation (WCF) provides a new TCP-based network protocol
 ## Security Implications of Port Sharing  
 
  Although the Net.TCP Port Sharing Service provides a layer of processing between applications and the network, applications that use port sharing should still be secured as if they were directly listening on the network. Specifically, applications that use port sharing should evaluate the process privileges under which they run. Consider running your application using the built-in Network Service account, which runs with the minimal set of process privileges required for network communication.  
-  
+
+## Known issue with update KB5018542
+This update will prevent the port sharing service from running.  Below is the 2 step process to re-enable it.
+
+Paste below into a .reg file and import to registry editor, then reboot.
+
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetTcpPortSharing]
+"Description"="@%systemroot%\\Microsoft.NET\\Framework64\\v4.0.30319\\ServiceModelInstallRC.dll,-8200"
+"DisplayName"="Net.Tcp Port Sharing Service"
+"ErrorControl"=dword:00000001
+"FailureActions"=hex:84,03,00,00,00,00,00,00,00,00,00,00,03,00,00,00,14,00,00,\
+  00,01,00,00,00,c0,d4,01,00,01,00,00,00,e0,93,04,00,00,00,00,00,00,00,00,00
+"ImagePath"=hex(2):25,00,73,00,79,00,73,00,74,00,65,00,6d,00,72,00,6f,00,6f,00,\
+  74,00,25,00,5c,00,4d,00,69,00,63,00,72,00,6f,00,73,00,6f,00,66,00,74,00,2e,\
+  00,4e,00,45,00,54,00,5c,00,46,00,72,00,61,00,6d,00,65,00,77,00,6f,00,72,00,\
+  6b,00,36,00,34,00,5c,00,76,00,34,00,2e,00,30,00,2e,00,33,00,30,00,33,00,31,\
+  00,39,00,5c,00,53,00,4d,00,53,00,76,00,63,00,48,00,6f,00,73,00,74,00,2e,00,\
+  65,00,78,00,65,00,00,00
+"ObjectName"="NT AUTHORITY\\LocalService"
+"RequiredPrivileges"=hex(7):53,00,65,00,43,00,72,00,65,00,61,00,74,00,65,00,47,\
+  00,6c,00,6f,00,62,00,61,00,6c,00,50,00,72,00,69,00,76,00,69,00,6c,00,65,00,\
+  67,00,65,00,00,00,00,00
+"ServiceSidType"=dword:00000003
+"Start"=dword:00000002
+"Type"=dword:00000020
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetTcpPortSharing\Security]
+"Security"=hex:01,00,04,80,84,00,00,00,90,00,00,00,00,00,00,00,14,00,00,00,02,\
+  00,70,00,05,00,00,00,00,00,14,00,fd,01,02,00,01,01,00,00,00,00,00,05,12,00,\
+  00,00,00,00,18,00,ff,01,0f,00,01,02,00,00,00,00,00,05,20,00,00,00,20,02,00,\
+  00,00,00,14,00,8d,01,02,00,01,01,00,00,00,00,00,05,0b,00,00,00,00,00,14,00,\
+  14,00,00,00,01,01,00,00,00,00,00,05,04,00,00,00,00,00,14,00,14,00,00,00,01,\
+  01,00,00,00,00,00,05,06,00,00,00,01,01,00,00,00,00,00,05,12,00,00,00,01,01,\
+  00,00,00,00,00,05,12,00,00,00
+
+
+Go to Windows Features and uncheck .NET Framework 4.7 and click okay.  This will uninstall .net and do a reboot
+Go back to Windows Features and re-check .NET Framework 4.7.  Make sure the TCP Port Sharing in the WCF Services submenu is checked.  Click okay and reboot to reinstall .net4.7
+After the computer comes back up the net.tcp port sharing service should be running okay.
+
 ## See also
 
 - [Configuring the Net.TCP Port Sharing Service](configuring-the-net-tcp-port-sharing-service.md)
